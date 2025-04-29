@@ -8,6 +8,7 @@ import com.shangan.trade.coupon.db.model.CouponBatch;
 import com.shangan.trade.coupon.db.model.CouponRule;
 import com.shangan.trade.coupon.exceptions.BizException;
 import com.shangan.trade.coupon.service.CouponSendService;
+import com.shangan.trade.coupon.utils.RedisLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -25,6 +27,28 @@ public class CouponSendServiceImpl implements CouponSendService {
 
     @Autowired
     private CouponDao couponDao;
+
+    @Autowired
+    private RedisLock redisLock;
+
+    @Override
+    public boolean sendUserCouponSynWithLock(long batchId, long userId) {
+        String lockkey = "sendUserCoupon";
+        String requestId = UUID.randomUUID().toString();
+        try {
+            //去获取分布式锁，并判断是否获取成功
+            if (redisLock.tryGetLock(lockkey, requestId, 1000)) {
+                return sendUserCouponSyn(batchId, userId);
+            }
+        } catch (Exception e) {
+            log.error("sendUserCouponSynWithLock error batchId={} userId={}", batchId, userId, e);
+            throw new BizException(e.getMessage());
+        } finally {
+            boolean redisLock_res = redisLock.releaseLock(lockkey, requestId);
+            System.out.println("redisLock_res: {}"+redisLock_res);
+        }
+        return false;
+    }
 
     /**
      * 同步发券
@@ -45,7 +69,7 @@ public class CouponSendServiceImpl implements CouponSendService {
             throw new BizException("券批次信息不存在");
         }
         //3.判断该批次的券余量是否大于0
-        if (couponBatch.getTotalCount() <= 0) {
+        if (couponBatch.getAvailableCount() <= 0) {
             log.error("couponBatch totalCount is not enough batchId={} userId={}", batchId, userId);
             throw new BizException("券批次余量不足");
         }

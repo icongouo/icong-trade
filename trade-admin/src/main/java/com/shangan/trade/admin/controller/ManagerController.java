@@ -165,7 +165,7 @@ public class ManagerController {
         ModelAndView modelAndView = new ModelAndView();
         try {
             log.info("batchId={}, userId={}", batchId, userId);
-            couponSendService.sendUserCouponSyn(batchId, userId);
+            couponSendService.sendUserCouponSynWithLock(batchId, userId);
             modelAndView.addObject("resultInfo", "发放成功");
             modelAndView.setViewName("process_result");
             return modelAndView;

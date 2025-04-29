@@ -13,4 +13,14 @@ public interface CouponSendService {
      * @return
      */
     boolean sendUserCouponSyn(long batchId, long userId);
+
+
+    /**
+     * 同步发券(使用了分布式锁)
+     *
+     * @param batchId
+     * @param userId
+     * @return
+     */
+    boolean sendUserCouponSynWithLock(long batchId, long userId);
 }
