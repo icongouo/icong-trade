@@ -6,8 +6,10 @@ import com.shangan.trade.coupon.db.model.CouponRule;
 import com.shangan.trade.coupon.service.CouponBatchService;
 import com.shangan.trade.coupon.service.CouponSendService;
 import lombok.extern.slf4j.Slf4j;
+import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,9 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Controller
@@ -176,5 +176,42 @@ public class ManagerController {
             modelAndView.setViewName("process_result");
             return modelAndView;
         }
+    }
+
+
+    /**
+     * 跳转批量发送页面
+     *
+     * @return
+     */
+    @RequestMapping("/sendCouponBatch")
+    public String sendCouponBatch() {
+        return "send_coupon_batch";
+    }
+    
+    
+
+    /**
+     * 发放优惠券给用户
+     *
+     * @param batchId
+     * @param userIds
+     * @return
+     */
+    @RequestMapping("/sendCouponBatchAction")
+    public ModelAndView sendCouponSynAction(@RequestParam("batchId") long batchId,
+                                            @RequestParam("userIds") String userIds) {
+        //根据换行符来
+        String[] userIdSplit = userIds.split("\r\n");
+        Set<Long> userIdSet = new HashSet<>();
+        for (String userId : userIdSplit) {
+            if (!StringUtils.isEmpty(userId)) {
+                userIdSet.add(Long.valueOf(userId));
+            }
+        }
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("resultInfo", "发放成功");
+        modelAndView.setViewName("process_result");
+        return modelAndView;
     }
 }
