@@ -305,6 +305,7 @@
             <th class="hidden-phone">优惠券类型</th>
             <th class="hidden-phone">发放类型</th>
             <th>总共数量</th>
+            <th>可用数量</th>
             <th>已发送量</th>
             <th>已使用量</th>
             <th>批次状态</th>
@@ -331,6 +332,7 @@
                 </span>
             </td>
             <td> <span th:text="${couponBatch.totalCount}"/></td>
+            <td> <span th:text="${couponBatch.availableCount}"/></td>
             <td> <span th:text="${couponBatch.assignCount}"/></td>
             <td> <span th:text="${couponBatch.usedCount}"/></td>
             <td>
