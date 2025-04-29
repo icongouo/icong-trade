@@ -3,11 +3,13 @@ package com.shangan.trade.coupon.db.model;
 import java.util.Date;
 
 public class Coupon {
-    private Long couponId;
+    private Long id;
 
     private Long userId;
 
     private Long batchId;
+
+    private String couponName;
 
     private Integer status;
 
@@ -19,12 +21,14 @@ public class Coupon {
 
     private Date usedTime;
 
-    public Long getCouponId() {
-        return couponId;
+    private Date createTime;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setCouponId(Long couponId) {
-        this.couponId = couponId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getUserId() {
@@ -41,6 +45,14 @@ public class Coupon {
 
     public void setBatchId(Long batchId) {
         this.batchId = batchId;
+    }
+
+    public String getCouponName() {
+        return couponName;
+    }
+
+    public void setCouponName(String couponName) {
+        this.couponName = couponName == null ? null : couponName.trim();
     }
 
     public Integer getStatus() {
@@ -81,5 +93,13 @@ public class Coupon {
 
     public void setUsedTime(Date usedTime) {
         this.usedTime = usedTime;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

@@ -49,8 +49,8 @@
                enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"
                selectByExampleQueryId="false"></table>
 
-        <table schema="" tableName="coupon_user" domainObjectName="Coupon" enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"
-               selectByExampleQueryId="false"></table>
+<!--        <table schema="" tableName="coupon_user" domainObjectName="Coupon" enableCountByExample="false"-->
+<!--               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"-->
+<!--               selectByExampleQueryId="false"></table>-->
     </context>
 </generatorConfiguration>

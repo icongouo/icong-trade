@@ -42,4 +42,11 @@ public interface CouponBatchDao {
      * @return
      */
     List<CouponBatch> queryCouponBatchList();
+
+    /**
+     * 更新发券后券批次数量记录信息
+     * @param id
+     * @return
+     */
+    boolean updateSendCouponBatchCount(Long id);
 }

@@ -18,4 +18,12 @@ public interface CouponBatchMapper {
     int updateByPrimaryKey(CouponBatch record);
 
     List<CouponBatch> queryCouponBatchList();
+
+    /**
+     * 更新发券后券批次数量记录信息
+     * @param id
+     * @return
+     */
+    int updateSendCouponBatchCount(Long id);
+
 }

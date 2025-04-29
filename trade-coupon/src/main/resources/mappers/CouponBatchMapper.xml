@@ -8,6 +8,7 @@
     <result column="coupon_type" jdbcType="INTEGER" property="couponType" />
     <result column="grant_type" jdbcType="INTEGER" property="grantType" />
     <result column="total_count" jdbcType="BIGINT" property="totalCount" />
+    <result column="available_count" jdbcType="BIGINT" property="availableCount" />
     <result column="assign_count" jdbcType="BIGINT" property="assignCount" />
     <result column="used_count" jdbcType="BIGINT" property="usedCount" />
     <result column="rule" jdbcType="VARCHAR" property="rule" />
@@ -15,8 +16,8 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, batch_name, coupon_name, coupon_type, grant_type, total_count, assign_count, 
-    used_count, rule, status, create_time
+    id, batch_name, coupon_name, coupon_type, grant_type, total_count, available_count, 
+    assign_count, used_count, rule, status, create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -31,12 +32,14 @@
   <insert id="insert" parameterType="com.shangan.trade.coupon.db.model.CouponBatch">
     insert into coupon_batch (id, batch_name, coupon_name, 
       coupon_type, grant_type, total_count, 
-      assign_count, used_count, rule, 
-      status, create_time)
+      available_count, assign_count, used_count, 
+      rule, status, create_time
+      )
     values (#{id,jdbcType=BIGINT}, #{batchName,jdbcType=VARCHAR}, #{couponName,jdbcType=VARCHAR}, 
       #{couponType,jdbcType=INTEGER}, #{grantType,jdbcType=INTEGER}, #{totalCount,jdbcType=BIGINT}, 
-      #{assignCount,jdbcType=BIGINT}, #{usedCount,jdbcType=BIGINT}, #{rule,jdbcType=VARCHAR}, 
-      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP})
+      #{availableCount,jdbcType=BIGINT}, #{assignCount,jdbcType=BIGINT}, #{usedCount,jdbcType=BIGINT}, 
+      #{rule,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.shangan.trade.coupon.db.model.CouponBatch">
     insert into coupon_batch
@@ -58,6 +61,9 @@
       </if>
       <if test="totalCount != null">
         total_count,
+      </if>
+      <if test="availableCount != null">
+        available_count,
       </if>
       <if test="assignCount != null">
         assign_count,
@@ -94,6 +100,9 @@
       <if test="totalCount != null">
         #{totalCount,jdbcType=BIGINT},
       </if>
+      <if test="availableCount != null">
+        #{availableCount,jdbcType=BIGINT},
+      </if>
       <if test="assignCount != null">
         #{assignCount,jdbcType=BIGINT},
       </if>
@@ -129,6 +138,9 @@
       <if test="totalCount != null">
         total_count = #{totalCount,jdbcType=BIGINT},
       </if>
+      <if test="availableCount != null">
+        available_count = #{availableCount,jdbcType=BIGINT},
+      </if>
       <if test="assignCount != null">
         assign_count = #{assignCount,jdbcType=BIGINT},
       </if>
@@ -154,6 +166,7 @@
       coupon_type = #{couponType,jdbcType=INTEGER},
       grant_type = #{grantType,jdbcType=INTEGER},
       total_count = #{totalCount,jdbcType=BIGINT},
+      available_count = #{availableCount,jdbcType=BIGINT},
       assign_count = #{assignCount,jdbcType=BIGINT},
       used_count = #{usedCount,jdbcType=BIGINT},
       rule = #{rule,jdbcType=VARCHAR},
@@ -167,4 +180,12 @@
     <include refid="Base_Column_List"/>
     from coupon_batch
   </select>
+
+  <update id="updateSendCouponBatchCount" parameterType="java.lang.Long">
+    update coupon_batch
+    set available_count = available_count - 1,
+        assign_count    = assign_count + 1
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
 </mapper>

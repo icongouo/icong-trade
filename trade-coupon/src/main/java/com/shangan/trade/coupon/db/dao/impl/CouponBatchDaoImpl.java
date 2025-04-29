@@ -5,7 +5,6 @@ import com.shangan.trade.coupon.db.model.CouponBatch;
 import com.shangan.trade.coupon.db.mappers.CouponBatchMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,5 +46,10 @@ public class CouponBatchDaoImpl implements CouponBatchDao {
     @Override
     public List<CouponBatch> queryCouponBatchList() {
         return couponBatchMapper.queryCouponBatchList();
+    }
+
+    @Override
+    public boolean updateSendCouponBatchCount(Long id) {
+        return couponBatchMapper.updateSendCouponBatchCount(id) > 0;
     }
 }
