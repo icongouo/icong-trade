@@ -1,10 +1,9 @@
 package com.shangan.trade.admin.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.shangan.trade.coupon.db.model.CouponBatch;
-import com.shangan.trade.coupon.db.model.CouponRule;
-import com.shangan.trade.coupon.service.CouponBatchService;
-import com.shangan.trade.coupon.service.CouponSendService;
+import com.shangan.trade.admin.client.CouponFeignClient;
+import com.shangan.trade.admin.model.CouponBatch;
+import com.shangan.trade.admin.model.CouponRule;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,19 +18,16 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * @author  changsu
- * @Time   2023
- * @function  管理后台的Controller
+ * @author changsu
+ * @Time 2023
+ * @function 管理后台的Controller
  */
 @Slf4j
 @Controller
 public class ManagerController {
 
     @Autowired
-    private CouponBatchService  couponBatchService;
-
-    @Autowired
-    private CouponSendService couponSendService;
+    private CouponFeignClient couponFeignClient;
 
     /**
      * 跳转券批次信息添加
@@ -92,10 +88,10 @@ public class ManagerController {
             //转为JSON格式
             couponBatch.setRule(JSON.toJSONString(couponRule));
 
-            couponBatchService.insertCouponBatch(couponBatch);
+            couponFeignClient.insertCouponBatch(couponBatch);
             log.info("addCouponBatchAction success  couponBatch:{}", JSON.toJSONString(couponRule));
             //跳转到券批次列表
-            return "coupon_batch_list";
+            return "redirect:/couponBatchList";
         } catch (Exception e) {
             log.error("addCouponBatchAction error", e);
             //跳转到异常提示页面
@@ -110,7 +106,7 @@ public class ManagerController {
      */
     @RequestMapping("/couponBatchList")
     public String couponBatchList(Map<String, Object> resultMap) {
-        List<CouponBatch> couponBatches = couponBatchService.queryCouponBatchList();
+        List<CouponBatch> couponBatches = couponFeignClient.queryCouponBatchList();
         resultMap.put("couponBatchList", couponBatches);
         return "coupon_batch_list";
     }
@@ -120,7 +116,7 @@ public class ManagerController {
      * 发放优惠券给用户
      *
      * @param batchId 批次号
-     * @param userId 用户ID
+     * @param userId  用户ID
      * @return 处理
      */
     @RequestMapping("/sendSyn/{batchId}/{userId}")
@@ -128,7 +124,7 @@ public class ManagerController {
     public String sendCouponSyn(@PathVariable long batchId, @PathVariable long userId) {
         try {
             log.info("batchId={}, userId={}", batchId, userId);
-            couponSendService.sendUserCouponSyn(batchId, userId);
+            couponFeignClient.sendUserCouponSyn(batchId, userId);
             return "优惠券发放成功";
         } catch (Exception e) {
             //发放优惠券给用户失败
@@ -160,7 +156,7 @@ public class ManagerController {
         ModelAndView modelAndView = new ModelAndView();
         try {
             log.info("sendCouponSynWeb  batchId:{} userId:{}", batchId, userId);
-            couponSendService.sendUserCouponSynWithLock(batchId, userId);
+            couponFeignClient.sendUserCouponSynWithLock(batchId, userId);
             modelAndView.addObject("resultInfo", "券发放成功");
             modelAndView.setViewName("process_result");//跳转到那个页面
         } catch (Exception ex) {
@@ -202,7 +198,7 @@ public class ManagerController {
                     userIdSet.add(Long.valueOf(userId));
                 }
             }
-            couponSendService.sendUserCouponBatch(batchId,userIdSet);
+            couponFeignClient.sendUserCouponBatch(batchId, userIdSet);
             modelAndView.addObject("resultInfo", "发放成功");
             modelAndView.setViewName("process_result");
         } catch (Exception ex) {

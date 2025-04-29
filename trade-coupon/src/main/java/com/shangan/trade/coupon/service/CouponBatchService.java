@@ -5,6 +5,7 @@ import com.shangan.trade.coupon.db.model.CouponBatch;
 import java.util.List;
 
 public interface CouponBatchService {
+
     /**
      * 新增一个券批次
      *
@@ -13,8 +14,9 @@ public interface CouponBatchService {
      */
     boolean insertCouponBatch(CouponBatch couponBatch);
 
+
     /**
-     * 查询券批次列表
+     * 查询优惠券批次列表
      * @return
      */
     List<CouponBatch> queryCouponBatchList();
@@ -24,4 +26,14 @@ public interface CouponBatchService {
      * @return
      */
     boolean pushBatchListRuleToCache();
+
+
+    /**
+     * 根据ID查询对应的券批次
+     *
+     * @param id
+     * @return
+     */
+    CouponBatch queryCouponBatchById(long id);
+
 }

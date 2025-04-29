@@ -1,14 +1,12 @@
 package com.shangan.trade.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.shangan.trade.user.client.CouponFeignClient;
+import com.shangan.trade.user.model.Coupon;
+import com.shangan.trade.user.model.CouponBatch;
+import com.shangan.trade.user.model.CouponRule;
+import com.shangan.trade.user.utils.RedisWorker;
 import com.shangan.trade.user.vo.CouponVO;
-import com.shangan.trade.coupon.db.dao.CouponBatchDao;
-import com.shangan.trade.coupon.db.model.Coupon;
-import com.shangan.trade.coupon.db.model.CouponBatch;
-import com.shangan.trade.coupon.db.model.CouponRule;
-import com.shangan.trade.coupon.service.CouponCodeService;
-import com.shangan.trade.coupon.service.CouponQueryService;
-import com.shangan.trade.coupon.utils.RedisWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,17 +27,13 @@ import java.util.List;
 @Controller
 public class UserCouponController {
 
+
     @Autowired
-    private CouponQueryService  couponQueryService;
+    private CouponFeignClient couponFeignClient;
+
 
     @Autowired
     private RedisWorker redisWorker;
-
-    @Autowired
-    private CouponCodeService couponCodeService;
-
-    @Autowired
-    private CouponBatchDao couponBatchDao;
 
     /**
      * 跳转到用户的优惠券列表页
@@ -51,7 +45,7 @@ public class UserCouponController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("coupon_list");
 
-        List<Coupon> coupons = couponQueryService.queryUsrCoupons(userId);
+        List<Coupon> coupons = couponFeignClient.queryUserCoupons(userId);
 
         List<CouponVO> notUsedList = new ArrayList<>();
         List<CouponVO> usedList = new ArrayList<>();
@@ -84,7 +78,7 @@ public class UserCouponController {
                                 @RequestParam("couponCode") String couponCode) {
         try {
             log.info("useCouponCode Req  userId:{}  couponCode:{}", userId, couponCode);
-            couponCodeService.userCouponCode(userId, couponCode);
+            couponFeignClient.userCouponCode(userId, couponCode);
             return "redirect:/coupon/list/" + userId;
         } catch (Exception e) {
             log.error("useCouponCode error ", e);
@@ -96,11 +90,12 @@ public class UserCouponController {
         CouponVO couponVO = new CouponVO();
         String batchRule = redisWorker.getValue("couponBatchRule:" + coupon.getBatchId());
         if (StringUtils.isEmpty(batchRule)) {
-            CouponBatch couponBatch = couponBatchDao.queryCouponBatchById(coupon.getBatchId());
+            CouponBatch couponBatch = couponFeignClient.queryCouponBatchById(coupon.getBatchId());
             batchRule = couponBatch.getRule();
         }
         /*
          * 将JSON中的rule规则，转化成CouponRule对象
+         *  {"couponType":1,"discountAmount":20,"endTime":1689855540000,"grantType":2,"startTime":1678969140000,"thresholdAmount":100}
          */
         CouponRule couponRule = JSON.parseObject(batchRule, CouponRule.class);
 
