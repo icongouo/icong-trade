@@ -44,8 +44,8 @@ public class CouponSendServiceImpl implements CouponSendService {
             log.error("sendUserCouponSynWithLock error batchId={} userId={}", batchId, userId, e);
             throw new BizException(e.getMessage());
         } finally {
-            boolean redisLock_res = redisLock.releaseLock(lockkey, requestId);
-            System.out.println("redisLock_res: {}"+redisLock_res);
+            // 执行完后必须要释放锁
+            redisLock.releaseLock(lockkey, requestId);
         }
         return false;
     }
