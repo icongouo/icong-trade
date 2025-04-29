@@ -4,6 +4,8 @@
 
 <generatorConfiguration>
     <context id="testTables" targetRuntime="MyBatis3">
+        <!--防止生成重复代码-->
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
         <commentGenerator>
             <!--不生成注释 -->
             <property name="suppressAllComments" value="true"/>
