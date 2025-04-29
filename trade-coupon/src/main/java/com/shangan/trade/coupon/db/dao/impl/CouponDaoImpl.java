@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 券-数据库操作
  */
@@ -21,5 +23,10 @@ public class CouponDaoImpl implements CouponDao {
         int result = couponMapper.insert(coupon);
         //大于0 表示插入成功
         return result > 0;
+    }
+
+    @Override
+    public List<Coupon> queryUserCoupons(long userId) {
+        return couponMapper.queryUserCoupons(userId);
     }
 }
