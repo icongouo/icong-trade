@@ -17,6 +17,12 @@
         <java.version>1.8</java.version>
     </properties>
     <dependencies>
+        <!-- trade-coupon模块 -->
+        <dependency>
+            <groupId>com.shangan</groupId>
+            <artifactId>trade-coupon</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!-- spring 配置文件-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

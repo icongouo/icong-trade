@@ -4,7 +4,7 @@ import com.shangan.trade.coupon.db.model.CouponBatch;
 
 public interface CouponBatchDao {
     /**
-     * 插入一个券批次
+     * 新增一个券批次
      *
      * @param couponBatch
      * @return
