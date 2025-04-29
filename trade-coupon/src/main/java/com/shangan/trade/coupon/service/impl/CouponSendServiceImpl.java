@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
 import java.util.Date;
 
 @Slf4j
@@ -27,6 +28,7 @@ public class CouponSendServiceImpl implements CouponSendService {
 
     /**
      * 同步发券
+     *
      * @param batchId
      * @param userId
      * @return
@@ -49,6 +51,7 @@ public class CouponSendServiceImpl implements CouponSendService {
         }
         //4.更新券余量和券发送数量
         boolean updateSendCouponBatchRes = couponBatchDao.updateSendCouponBatchCount(couponBatch.getId());
+        log.info("updateSendCouponBatchCount batchId={} userId={}", batchId, userId);
         if (!updateSendCouponBatchRes) {
             log.error("couponBatch updateSendCouponBatchRes error batchId={} userId={}", batchId, userId);
             throw new BizException("更新券券批次数量失败");

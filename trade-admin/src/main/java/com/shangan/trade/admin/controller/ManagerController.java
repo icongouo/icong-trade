@@ -78,6 +78,7 @@ public class ManagerController {
             couponBatch.setCouponType(couponType);
             couponBatch.setGrantType(grantType);
             couponBatch.setTotalCount(totalCount);
+            couponBatch.setAvailableCount(totalCount);
             //默认状态有效
             couponBatch.setStatus(1);
             couponBatch.setUsedCount(0L);

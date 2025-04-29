@@ -24,6 +24,7 @@ public class CouponBatchTest {
         couponBatch.setCouponType(1);
         couponBatch.setRule("rule");
         couponBatch.setTotalCount(100L);
+        couponBatch.setAvailableCount(100L);
         couponBatch.setUsedCount(20L);
         couponBatch.setAssignCount(10L);
         couponBatch.setGrantType(1);
