@@ -2,6 +2,8 @@ package com.shangan.trade.coupon.db.mappers;
 
 import com.shangan.trade.coupon.db.model.CouponBatch;
 
+import java.util.List;
+
 public interface CouponBatchMapper {
     int deleteByPrimaryKey(Long id);
 
@@ -14,4 +16,6 @@ public interface CouponBatchMapper {
     int updateByPrimaryKeySelective(CouponBatch record);
 
     int updateByPrimaryKey(CouponBatch record);
+
+    List<CouponBatch> queryCouponBatchList();
 }

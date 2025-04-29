@@ -299,30 +299,49 @@
         <table  class="display table table-bordered table-striped" id="dynamic-table">
         <thead>
         <tr>
-            <th>Rendering engine</th>
-            <th>Browser</th>
-            <th>Platform(s)</th>
-            <th class="hidden-phone">Engine version</th>
-            <th class="hidden-phone">CSS grade</th>
+            <th>批次ID</th>
+            <th>券批次名称</th>
+            <th>优惠券名称</th>
+            <th class="hidden-phone">优惠券类型</th>
+            <th class="hidden-phone">发放类型</th>
+            <th>总共数量</th>
+            <th>已发送量</th>
+            <th>已使用量</th>
+            <th>批次状态</th>
+            <th>创建时间</th>
         </tr>
         </thead>
         <tbody>
-        <tr class="gradeX">
-            <td>Trident</td>
-            <td>Internet
-                Explorer 4.0</td>
-            <td>Win 95+</td>
-            <td class="center hidden-phone">4</td>
-            <td class="center hidden-phone">X</td>
+
+        <tr class="gradeX" th:each="couponBatch : ${couponBatchList}">
+            <td> <span th:text="${couponBatch.id}"/></td>
+            <td> <span th:text="${couponBatch.batchName}"/></td>
+            <td> <span th:text="${couponBatch.couponName}"/></td>
+            <td>
+                <span th:switch="${couponBatch.couponType}">
+                    <span th:case="1">满减券</span>
+                    <span th:case="2">满折券</span>
+                </span>
+            </td>
+            <td>
+                <span th:switch="${couponBatch.grantType}">
+                    <span th:case="1">用户领取</span>
+                    <span th:case="2">系统发放</span>
+                    <span th:case="3">兑换码兑换</span>
+                </span>
+            </td>
+            <td> <span th:text="${couponBatch.totalCount}"/></td>
+            <td> <span th:text="${couponBatch.assignCount}"/></td>
+            <td> <span th:text="${couponBatch.usedCount}"/></td>
+            <td>
+                <span th:switch="${couponBatch.status}">
+                    <span th:case="1">有效</span>
+                    <span th:case="-1">已失效</span>
+                </span>
+            </td>
+            <td> <span th:text="${#dates.format(couponBatch.getCreateTime(),'yyyy-MM-dd HH:mm:ss')}"/></td>
         </tr>
-        <tr class="gradeC">
-            <td>Trident</td>
-            <td>Internet
-                Explorer 5.0</td>
-            <td>Win 95+</td>
-            <td class="center hidden-phone">5</td>
-            <td class="center hidden-phone">C</td>
-        </tr>
+
         </tfoot>
         </table>
         </div>

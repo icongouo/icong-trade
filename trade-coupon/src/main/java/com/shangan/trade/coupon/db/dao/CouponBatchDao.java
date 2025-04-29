@@ -2,6 +2,8 @@ package com.shangan.trade.coupon.db.dao;
 
 import com.shangan.trade.coupon.db.model.CouponBatch;
 
+import java.util.List;
+
 public interface CouponBatchDao {
     /**
      * 新增一个券批次
@@ -34,4 +36,10 @@ public interface CouponBatchDao {
      * @return
      */
     boolean updateCouponBatch(CouponBatch couponBatch);
+
+    /**
+     * 查询优惠券批次列表
+     * @return
+     */
+    List<CouponBatch> queryCouponBatchList();
 }

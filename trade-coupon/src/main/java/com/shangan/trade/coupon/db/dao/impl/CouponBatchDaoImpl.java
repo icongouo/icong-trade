@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 券批次-数据库操作
  */
@@ -40,5 +42,10 @@ public class CouponBatchDaoImpl implements CouponBatchDao {
     public boolean updateCouponBatch(CouponBatch couponBatch) {
         int result = couponBatchMapper.updateByPrimaryKey(couponBatch);
         return result > 0;
+    }
+
+    @Override
+    public List<CouponBatch> queryCouponBatchList() {
+        return couponBatchMapper.queryCouponBatchList();
     }
 }

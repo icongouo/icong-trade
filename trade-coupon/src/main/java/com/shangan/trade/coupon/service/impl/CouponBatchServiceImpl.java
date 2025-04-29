@@ -6,6 +6,8 @@ import com.shangan.trade.coupon.service.CouponBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CouponBatchServiceImpl implements CouponBatchService {
 
@@ -15,5 +17,10 @@ public class CouponBatchServiceImpl implements CouponBatchService {
     @Override
     public boolean insertCouponBatch(CouponBatch couponBatch) {
         return couponBatchDao.insertCouponBatch(couponBatch);
+    }
+
+    @Override
+    public List<CouponBatch> queryCouponBatchList() {
+        return couponBatchDao.queryCouponBatchList();
     }
 }

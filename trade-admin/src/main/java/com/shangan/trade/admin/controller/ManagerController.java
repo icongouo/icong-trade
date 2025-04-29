@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -47,7 +48,9 @@ public class ManagerController {
      * @return
      */
     @RequestMapping("/couponBatchList")
-    public String couponBatchList() {
+    public String couponBatchList(Map<String, Object> resultMap) {
+        List<CouponBatch> couponBatchList = couponBatchService.queryCouponBatchList();
+        resultMap.put("couponBatchList", couponBatchList);
         return "coupon_batch_list";
     }
 

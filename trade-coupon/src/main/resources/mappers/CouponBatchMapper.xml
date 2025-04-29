@@ -161,4 +161,10 @@
       create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="queryCouponBatchList"  resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from coupon_batch
+  </select>
 </mapper>
