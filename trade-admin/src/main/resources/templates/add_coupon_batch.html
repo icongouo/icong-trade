@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -7,7 +7,7 @@
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
 
-    <title>添加秒杀活动信息</title>
+    <title>添加优惠券批次</title>
 
     <link href="css/style.css" rel="stylesheet">
     <link href="css/style-/responsive.css" rel="stylesheet">
@@ -69,6 +69,12 @@
                         <li><a href="/addSkillActivity"> 添加秒杀活动信息</a></li>
                     </ul>
                 </li>
+                <li class="menu-list"><a href="/pushSeckillCache"><i class="fa fa-laptop"></i> <span>缓存预热</span></a>
+                    <ul class="sub-menu-list">
+                        <li><a href="/pushSeckillCache"> 推送秒杀缓存预热</a></li>
+                    </ul>
+                </li>
+
                 <li><a href="login.html"><i class="fa fa-sign-in"></i> <span>Login Page</span></a></li>
 
             </ul>
@@ -300,36 +306,72 @@
         <!-- page heading end-->
 
         <!--body wrapper start-->
-        <section class="wrapper">
             <!-- page start-->
 
             <div class="row">
                 <div class="col-lg-6">
-                    <section class="panel">
                         <header class="panel-heading">
-                            添加秒杀活动信息
+                            <h4>添加券批次信息</h4>
                         </header>
                         <div class="panel-body">
-                            <form class="form-horizontal" role="form" th:action="@{/addSkillActivityAction}" method="post">
+                            <form class="form-horizontal" role="form" th:action="@{/addCouponBatchAction}" method="post">
                                 <div class="form-group">
-                                    <label for="activityName" class="col-lg-2 col-sm-2 control-label"><span
-                                            style="color:#F04844;">*</span> 活动名称</label>
+                                    <label for="batchName" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 批次名称</label>
                                     <div class="col-md-6 form-group">
-                                        <input type="text" class="form-control" id="activityName" name="activityName"
-                                               placeholder="活动名称">
+                                        <input type="text" class="form-control" id="batchName" name="batchName"
+                                               placeholder="批次名称">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="goodsId" class="col-lg-2 col-sm-2 control-label"><span
-                                            style="color:#F04844;">*</span> 商品id</label>
+                                    <label for="couponName" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 券名称</label>
                                     <div class="col-md-6 form-group">
-                                        <input type="text" class="form-control" id="goodsId" name="goodsId"
-                                               placeholder="商品id">
+                                        <input type="text" class="form-control" id="couponName" name="couponName"
+                                               placeholder="优惠券名称">
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="radio-01" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 券类型</label>
+
+                                    <label for="radio-01" class="col-lg-2 col-sm-2 control-label">
+                                        <input type="radio" checked="" value="1" id="radio-01" name="couponType">满减卷
+                                    </label>
+                                    <label for="radio-02" class="col-lg-2 col-sm-2 control-label">
+                                        <input type="radio" value="2" id="radio-02" name="couponType">满折券
+                                    </label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="radio-01" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 发放类型</label>
+                                    <label for="grantType-radio-01" class="col-lg-2 col-sm-2 control-label">
+                                        <input type="radio" checked="" value="1" id="grantType-radio-01" name="grantType">用户领取
+                                    </label>
+                                    <label for="grantType-radio-02" class="col-lg-2 col-sm-2 control-label">
+                                        <input type="radio" value="2" id="grantType-radio-02" name="grantType">系统发放
+                                    </label>
+                                    <label for="grantType-radio-03" class="col-lg-2 col-sm-2 control-label">
+                                        <input type="radio" value="3" id="grantType-radio-03" name="grantType">兑换码
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="totalCount" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 发放总量</label>
+                                    <div class="col-md-6 form-group">
+                                        <input type="text" class="form-control" id="totalCount" name="totalCount"
+                                               placeholder="发放总量">
+                                    </div>
+                                </div>
+                                <h5>限制使用规则</h5>
+                                <div class="form-group">
+                                    <label for="startTime" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 有效时间</label>
                                 </div>
                                 <div class="form-group">
                                     <label for="startTime" class="col-lg-2 col-sm-2 control-label"><span
-                                            style="color:#F04844;">*</span> 活动开始时间</label>
+                                            style="color:#F04844;"></span>  开始时间</label>
                                     <div class="col-md-6 form-group">
                                         <input type="datetime-local" class="form-control" id="startTime" name="startTime"
                                                placeholder="活动开始时间">
@@ -337,34 +379,28 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="endTime" class="col-lg-2 col-sm-2 control-label"><span
-                                            style="color:#F04844;">*</span> 活动结束时间</label>
+                                            style="color:#F04844;"></span>  结束时间</label>
                                     <div class="col-md-6 form-group">
                                         <input type="datetime-local" class="form-control" id="endTime" name="endTime"
                                                placeholder="活动结束时间">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="availableStock" class="col-lg-2 col-sm-2 control-label"><span
-                                            style="color:#F04844;">*</span> 库存量</label>
+                                    <label for="totalCount" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 门槛金额</label>
                                     <div class="col-md-6 form-group">
-                                        <input type="text" class="form-control" id="availableStock" name="availableStock"
-                                               placeholder="库存量">
+                                        <label for="totalCount" > 消费满</label>
+                                        <input type="text"  id="thresholdAmount" name="thresholdAmount"
+                                               placeholder="门槛金额">
+                                        <label for="totalCount" > 元可用</label>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="seckillPrice" class="col-lg-2 col-sm-2 control-label"><span
-                                            style="color:#F04844;">*</span> 秒杀价格</label>
+                                    <label for="discountAmount" class="col-lg-2 col-sm-2 control-label"><span
+                                            style="color:#F04844;">*</span> 优惠金额</label>
                                     <div class="col-md-6 form-group">
-                                        <input type="text" class="form-control" id="seckillPrice" name="seckillPrice"
-                                               placeholder="秒杀价格（单位为分）">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="oldPrice" class="col-lg-2 col-sm-2 control-label"><span
-                                            style="color:#F04844;">*</span> 商品原价</label>
-                                    <div class="col-md-6 form-group">
-                                        <input type="text" class="form-control" id="oldPrice" name="oldPrice"
-                                               placeholder="商品原价（单位为分）">
+                                        <input type="text" class="form-control" id="discountAmount" name="discountAmount"
+                                               placeholder="优惠金额">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -374,19 +410,16 @@
                                 </div>
                             </form>
                         </div>
-                    </section>
-
                 </div>
             </div>
 
             <!-- page end-->
-        </section>
         <!--body wrapper end-->
 
         <!--footer section start-->
-        <footer>
-            </a>
-        </footer>
+<!--        <footer>-->
+<!--            </a>-->
+<!--        </footer>-->
         <!--footer section end-->
 
 

@@ -4,7 +4,7 @@ var EditableTable = function () {
 
         //main function to initiate the module
         init: function () {
-            function /restoreRow(oTable, nRow) {
+            function restoreRow(oTable, nRow) {
                 var aData = oTable.fnGetData(nRow);
                 var jqTds = $('>td', nRow);
 
