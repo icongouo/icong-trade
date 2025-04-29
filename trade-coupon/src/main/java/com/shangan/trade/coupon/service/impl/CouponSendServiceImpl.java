@@ -9,6 +9,7 @@ import com.shangan.trade.coupon.db.mappers.CouponBatchMapper;
 import com.shangan.trade.coupon.db.model.*;
 import com.shangan.trade.coupon.exceptions.BizException;
 import com.shangan.trade.coupon.mq.MessageSender;
+import com.shangan.trade.coupon.service.CouponRemindService;
 import com.shangan.trade.coupon.service.CouponSendService;
 import com.shangan.trade.coupon.utils.RedisLock;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +44,8 @@ public class CouponSendServiceImpl implements CouponSendService {
     @Autowired
     private MessageSender messageSender;
 
+    @Autowired
+    private CouponRemindService couponRemindService;
 
     @Override
     public boolean sendUserCouponSynWithLock(long batchId, long userId) {
@@ -89,11 +92,16 @@ public class CouponSendServiceImpl implements CouponSendService {
             throw new BizException("更新券券批次数量失败");
         }
         //5.优惠券表中新增该用户优惠券记录
-        boolean insertCouponRes = couponDao.insertCoupon(createCoupon(couponBatch, userId));
+        Coupon coupon = createCoupon(couponBatch, userId);
+        boolean insertCouponRes = couponDao.insertCoupon(coupon);
         if (!insertCouponRes) {
             log.error("couponBatch insertCoupon error batchId={} userId={}", batchId, userId);
             throw new BizException("用户发券失败");
         }
+        //6.插入一个券过期提醒任务
+        //将JSON中的rule规则，转化成CouponRule对象
+        CouponRule couponRule = JSON.parseObject(couponBatch.getRule(), CouponRule.class);
+        couponRemindService.insertCouponRemindTask(userId,coupon.getId(),couponRule);
         return true;
     }
 

@@ -6,6 +6,7 @@ import com.shangan.trade.coupon.db.dao.IdempotentTaskDao;
 import com.shangan.trade.coupon.db.dao.TaskDao;
 import com.shangan.trade.coupon.db.model.SendCouponTaskModel;
 import com.shangan.trade.coupon.db.model.Task;
+import com.shangan.trade.coupon.service.CouponRemindService;
 import com.shangan.trade.coupon.service.CouponSendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class ScheduleTask {
 
     @Autowired
     private IdempotentTaskDao idempotentTaskDao;
+
+    @Autowired
+    private CouponRemindService couponRemindService;
 
 //    //3.添加定时任务
 //    @Scheduled(cron = "0/5 * * * * ?")
@@ -68,5 +72,15 @@ public class ScheduleTask {
         }
         task.setModifiedTime(new Date());
         taskDao.update(task);
+    }
+
+
+    /**
+     *  发券提醒任务
+     */
+    @Scheduled(cron = "0/30 * * * * ?")
+    private void couponRemindTask() {
+        System.err.println("执行提醒使用券任务时间: " + LocalDateTime.now());
+        couponRemindService.runCouponRemindTask();
     }
 }

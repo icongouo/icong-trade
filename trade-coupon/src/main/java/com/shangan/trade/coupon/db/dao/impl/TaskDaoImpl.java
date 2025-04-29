@@ -34,5 +34,8 @@ public class TaskDaoImpl implements TaskDao {
         return taskMapper.queryFailedTasks();
     }
 
-
+    @Override
+    public List<Task> queryRemindTasks() {
+        return taskMapper.queryRemindTasks();
+    }
 }

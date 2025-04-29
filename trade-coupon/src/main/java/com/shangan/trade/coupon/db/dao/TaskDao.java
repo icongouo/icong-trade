@@ -33,4 +33,6 @@ public interface TaskDao {
      * @return
      */
     List<Task> queryFailedTasks();
+
+    List<Task> queryRemindTasks();
 }

@@ -13,11 +13,11 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, status, try_count, biz_type, biz_id, biz_param, schedule_time, modified_time, 
+    id, status, try_count, biz_type, biz_id, biz_param, schedule_time, modified_time,
     create_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
-    select 
+    select
     <include refid="Base_Column_List" />
     from task
     where id = #{id,jdbcType=BIGINT}
@@ -27,14 +27,14 @@
     where id = #{id,jdbcType=BIGINT}
   </delete>
   <insert id="insert" parameterType="com.shangan.trade.coupon.db.model.Task">
-    insert into task (id, status, try_count, 
-      biz_type, biz_id, biz_param, 
-      schedule_time, modified_time, create_time
-      )
-    values (#{id,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{tryCount,jdbcType=INTEGER}, 
-      #{bizType,jdbcType=VARCHAR}, #{bizId,jdbcType=VARCHAR}, #{bizParam,jdbcType=VARCHAR}, 
-      #{scheduleTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
-      )
+    insert into task (id, status, try_count,
+                      biz_type, biz_id, biz_param,
+                      schedule_time, modified_time, create_time
+    )
+    values (#{id,jdbcType=BIGINT}, #{status,jdbcType=INTEGER}, #{tryCount,jdbcType=INTEGER},
+            #{bizType,jdbcType=VARCHAR}, #{bizId,jdbcType=VARCHAR}, #{bizParam,jdbcType=VARCHAR},
+            #{scheduleTime,jdbcType=TIMESTAMP}, #{modifiedTime,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}
+           )
   </insert>
   <insert id="insertSelective" parameterType="com.shangan.trade.coupon.db.model.Task">
     insert into task
@@ -130,13 +130,13 @@
   <update id="updateByPrimaryKey" parameterType="com.shangan.trade.coupon.db.model.Task">
     update task
     set status = #{status,jdbcType=INTEGER},
-      try_count = #{tryCount,jdbcType=INTEGER},
-      biz_type = #{bizType,jdbcType=VARCHAR},
-      biz_id = #{bizId,jdbcType=VARCHAR},
-      biz_param = #{bizParam,jdbcType=VARCHAR},
-      schedule_time = #{scheduleTime,jdbcType=TIMESTAMP},
-      modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP}
+        try_count = #{tryCount,jdbcType=INTEGER},
+        biz_type = #{bizType,jdbcType=VARCHAR},
+        biz_id = #{bizId,jdbcType=VARCHAR},
+        biz_param = #{bizParam,jdbcType=VARCHAR},
+        schedule_time = #{scheduleTime,jdbcType=TIMESTAMP},
+        modified_time = #{modifiedTime,jdbcType=TIMESTAMP},
+        create_time = #{createTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
 
@@ -159,5 +159,12 @@
     <include refid="Base_Column_List"/>
     from task
     where status = 2 limit 100;
+  </select>
+
+  <select id="queryRemindTasks" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from task
+    where status = 0 and schedule_time <![CDATA[ <= ]]>now() limit 100;
   </select>
 </mapper>
