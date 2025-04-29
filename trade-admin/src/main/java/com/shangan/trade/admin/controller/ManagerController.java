@@ -6,7 +6,6 @@ import com.shangan.trade.coupon.db.model.CouponRule;
 import com.shangan.trade.coupon.service.CouponBatchService;
 import com.shangan.trade.coupon.service.CouponSendService;
 import lombok.extern.slf4j.Slf4j;
-import org.mockito.internal.util.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -19,25 +18,20 @@ import org.springframework.web.servlet.ModelAndView;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+ * @author  changsu
+ * @Time   2023
+ * @function  管理后台的Controller
+ */
 @Slf4j
 @Controller
 public class ManagerController {
 
     @Autowired
-    private CouponBatchService couponBatchService;
+    private CouponBatchService  couponBatchService;
 
     @Autowired
     private CouponSendService couponSendService;
-
-    /**
-     * 跳转到主页面
-     *
-     * @return
-     */
-    @RequestMapping("/index")
-    public String index() {
-        return "index";
-    }
 
     /**
      * 跳转券批次信息添加
@@ -45,20 +39,8 @@ public class ManagerController {
      * @return
      */
     @RequestMapping("/addCouponBatch")
-    public String addGoods() {
+    public String addCouponBatch() {
         return "add_coupon_batch";
-    }
-
-    /**
-     * 跳转到优惠券批次列表页
-     *
-     * @return
-     */
-    @RequestMapping("/couponBatchList")
-    public String couponBatchList(Map<String, Object> resultMap) {
-        List<CouponBatch> couponBatchList = couponBatchService.queryCouponBatchList();
-        resultMap.put("couponBatchList", couponBatchList);
-        return "coupon_batch_list";
     }
 
     /**
@@ -101,6 +83,7 @@ public class ManagerController {
             //获取到的startTime时间格式  2022-10-05T22:51
             startTime = startTime.substring(0, 10) + " " + startTime.substring(11);
             endTime = endTime.substring(0, 10) + " " + endTime.substring(11);
+
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm");
             couponRule.setStartTime(format.parse(startTime));
             couponRule.setEndTime(format.parse(endTime));
@@ -120,13 +103,25 @@ public class ManagerController {
         }
     }
 
+    /**
+     * 跳转到优惠券批次列表页
+     *
+     * @return
+     */
+    @RequestMapping("/couponBatchList")
+    public String couponBatchList(Map<String, Object> resultMap) {
+        List<CouponBatch> couponBatches = couponBatchService.queryCouponBatchList();
+        resultMap.put("couponBatchList", couponBatches);
+        return "coupon_batch_list";
+    }
+
 
     /**
      * 发放优惠券给用户
      *
-     * @param batchId
-     * @param userId
-     * @return
+     * @param batchId 批次号
+     * @param userId 用户ID
+     * @return 处理
      */
     @RequestMapping("/sendSyn/{batchId}/{userId}")
     @ResponseBody
@@ -155,27 +150,25 @@ public class ManagerController {
     /**
      * 发放优惠券给用户
      *
-     * @param batchId
-     * @param userId
-     * @return
+     * @param batchId 批次ID
+     * @param userId  用户ID
+     * @return 跳转到处理结果页面
      */
     @RequestMapping("/sendCouponSynAction")
-    public ModelAndView sendCouponSynAction(@RequestParam("batchId") long batchId,
-                                            @RequestParam("userId") long userId) {
+    public ModelAndView sendCouponSynWeb(@RequestParam("batchId") long batchId,
+                                         @RequestParam("userId") long userId) {
         ModelAndView modelAndView = new ModelAndView();
         try {
-            log.info("batchId={}, userId={}", batchId, userId);
+            log.info("sendCouponSynWeb  batchId:{} userId:{}", batchId, userId);
             couponSendService.sendUserCouponSynWithLock(batchId, userId);
-            modelAndView.addObject("resultInfo", "发放成功");
-            modelAndView.setViewName("process_result");
-            return modelAndView;
-        } catch (Exception e) {
-            //发放优惠券给用户失败
-            log.error("sendCouponSyn error,errorMessage:{}", e.getMessage());
-            modelAndView.addObject("resultInfo", "发放优惠券给用户失败,原因" + e.getMessage());
-            modelAndView.setViewName("process_result");
-            return modelAndView;
+            modelAndView.addObject("resultInfo", "券发放成功");
+            modelAndView.setViewName("process_result");//跳转到那个页面
+        } catch (Exception ex) {
+            log.error("sendCouponSynWeb error,errorMessage:{}", ex.getMessage());
+            modelAndView.addObject("resultInfo", "发放优惠券给用户失败,原因" + ex.getMessage());
+            modelAndView.setViewName("process_result");//跳转到那个页面
         }
+        return modelAndView;
     }
 
 
@@ -188,8 +181,6 @@ public class ManagerController {
     public String sendCouponBatch() {
         return "send_coupon_batch";
     }
-    
-    
 
     /**
      * 发放优惠券给用户
@@ -199,19 +190,27 @@ public class ManagerController {
      * @return
      */
     @RequestMapping("/sendCouponBatchAction")
-    public ModelAndView sendCouponSynAction(@RequestParam("batchId") long batchId,
-                                            @RequestParam("userIds") String userIds) {
-        //根据换行符来
-        String[] userIdSplit = userIds.split("\r\n");
-        Set<Long> userIdSet = new HashSet<>();
-        for (String userId : userIdSplit) {
-            if (!StringUtils.isEmpty(userId)) {
-                userIdSet.add(Long.valueOf(userId));
-            }
-        }
+    public ModelAndView sendCouponBatchAction(@RequestParam("batchId") long batchId,
+                                              @RequestParam("userIds") String userIds) {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("resultInfo", "发放成功");
-        modelAndView.setViewName("process_result");
+        try {
+            //根据换行符来
+            String[] userIdSplit = userIds.split("\r\n");
+            Set<Long> userIdSet = new HashSet<>();
+            for (String userId : userIdSplit) {
+                if (!StringUtils.isEmpty(userId)) {
+                    userIdSet.add(Long.valueOf(userId));
+                }
+            }
+            couponSendService.sendUserCouponBatch(batchId,userIdSet);
+            modelAndView.addObject("resultInfo", "发放成功");
+            modelAndView.setViewName("process_result");
+        } catch (Exception ex) {
+            log.error("sendCouponBatchAction error,errorMessage:{}", ex.getMessage());
+            modelAndView.addObject("resultInfo", "发放优惠券给用户失败,原因" + ex.getMessage());
+            modelAndView.setViewName("process_result");//跳转到那个页面
+        }
         return modelAndView;
     }
+
 }

@@ -1,8 +1,7 @@
 package com.shangan.trade.coupon.service;
 
-/**
- * 发送优惠券服务
- */
+import java.util.Set;
+
 public interface CouponSendService {
 
     /**
@@ -14,7 +13,6 @@ public interface CouponSendService {
      */
     boolean sendUserCouponSyn(long batchId, long userId);
 
-
     /**
      * 同步发券(使用了分布式锁)
      *
@@ -23,4 +21,13 @@ public interface CouponSendService {
      * @return
      */
     boolean sendUserCouponSynWithLock(long batchId, long userId);
+
+    /**
+     * 批量给用户发放优惠券
+     *
+     * @param batchId
+     * @param userIdSet
+     * @return
+     */
+    boolean sendUserCouponBatch(long batchId, Set<Long> userIdSet);
 }

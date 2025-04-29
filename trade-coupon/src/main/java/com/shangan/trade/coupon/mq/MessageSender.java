@@ -19,8 +19,9 @@ public class MessageSender {
      * @param topic
      * @param message
      */
-    public void send(String topic, String message) {
+    public void sendMessage(String topic,String message){
         log.info("send message topic:{} message:{}", topic, message);
-        kafkaTemplate.send(topic, message);
+        kafkaTemplate.send(topic,message);
     }
+
 }

@@ -11,7 +11,7 @@ import redis.clients.jedis.JedisPool;
 public class RedisWorker {
 
     @Autowired
-    private JedisPool jedisPool;
+    private JedisPool  jedisPool;
 
     /**
      * 向Redis中设置key-value值
@@ -19,11 +19,12 @@ public class RedisWorker {
      * @param key
      * @param value
      */
-    public void setValue(String key, String value) {
+    public void setKey(String key, String value) {
         Jedis jedisClient = jedisPool.getResource();
         jedisClient.set(key, value);
         jedisClient.close();
     }
+
 
     /**
      * 根据key从Redis中获取对应的值
@@ -31,23 +32,11 @@ public class RedisWorker {
      * @param key
      * @return
      */
-    public String getValueByKey(String key) {
+    public String  getValue(String key){
         Jedis jedisClient = jedisPool.getResource();
         String value = jedisClient.get(key);
         jedisClient.close();
         return value;
-    }
-
-    /**
-     * 向Redis中设置key-value值
-     *
-     * @param key
-     * @param value
-     */
-    public void setValue(String key, Long value) {
-        Jedis jedisClient = jedisPool.getResource();
-        jedisClient.set(key, value.toString());
-        jedisClient.close();
     }
 
 }
