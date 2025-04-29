@@ -12,7 +12,7 @@
         </commentGenerator>
         <jdbcConnection
                 driverClass="com.mysql.cj.jdbc.Driver"
-                connectionURL="jdbc:mysql://localhost:3306/trade_coupon?serverTimezone=GMT"
+                connectionURL="jdbc:mysql://localhost:3306/trade_coupon?serverTimezone=PST"
                 userId="root"
                 password="root123456">
         </jdbcConnection>
@@ -45,12 +45,17 @@
         </javaClientGenerator>
 
         <!-- 对应要操作的表 -->
-        <table schema="" tableName="coupon_batch" domainObjectName="CouponBatch" enableCountByExample="false"
-               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"
-               selectByExampleQueryId="false"></table>
+        <!--        <table schema="" tableName="coupon_batch" domainObjectName="CouponBatch" enableCountByExample="false"-->
+        <!--               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"-->
+        <!--               selectByExampleQueryId="false"></table>-->
 
-<!--        <table schema="" tableName="coupon_user" domainObjectName="Coupon" enableCountByExample="false"-->
-<!--               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"-->
-<!--               selectByExampleQueryId="false"></table>-->
+        <!--        <table schema="" tableName="coupon_user" domainObjectName="Coupon" enableCountByExample="false"-->
+        <!--               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"-->
+        <!--               selectByExampleQueryId="false"></table>-->
+
+        <table schema="" tableName="coupon_code" domainObjectName="CouponCode" enableCountByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false"
+               selectByExampleQueryId="false">
+        </table>
     </context>
 </generatorConfiguration>

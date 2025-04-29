@@ -1,16 +1,22 @@
 package com.shangan.trade.user.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.shangan.trade.user.vo.CouponVO;
+import com.shangan.trade.coupon.db.dao.CouponBatchDao;
 import com.shangan.trade.coupon.db.model.Coupon;
+import com.shangan.trade.coupon.db.model.CouponBatch;
 import com.shangan.trade.coupon.db.model.CouponRule;
+import com.shangan.trade.coupon.service.CouponCodeService;
 import com.shangan.trade.coupon.service.CouponQueryService;
 import com.shangan.trade.coupon.utils.RedisWorker;
-import com.shangan.trade.user.vo.CouponVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.text.DateFormat;
@@ -28,6 +34,12 @@ public class UserCouponController {
 
     @Autowired
     private RedisWorker redisWorker;
+
+    @Autowired
+    private CouponCodeService couponCodeService;
+
+    @Autowired
+    private CouponBatchDao couponBatchDao;
 
     /**
      * 跳转到用户的优惠券列表页
@@ -61,9 +73,32 @@ public class UserCouponController {
         return modelAndView;
     }
 
+    /**
+     * 兑换优惠券码
+     *
+     * @param userId
+     * @param couponCode
+     */
+    @RequestMapping("/coupon/useCouponCode/{userId}")
+    public String useCouponCode(@PathVariable("userId") long userId,
+                                @RequestParam("couponCode") String couponCode) {
+        try {
+            log.info("useCouponCode Req  userId:{}  couponCode:{}", userId, couponCode);
+            couponCodeService.userCouponCode(userId, couponCode);
+            return "redirect:/coupon/list/" + userId;
+        } catch (Exception e) {
+            log.error("useCouponCode error ", e);
+            return e.getMessage();
+        }
+    }
+
     public CouponVO createCouponVo(Coupon coupon) {
         CouponVO couponVO = new CouponVO();
-        String batchRule = redisWorker.getValueByKey("couponBatchRule:" + coupon.getBatchId());
+        String batchRule = redisWorker.getValue("couponBatchRule:" + coupon.getBatchId());
+        if (StringUtils.isEmpty(batchRule)) {
+            CouponBatch couponBatch = couponBatchDao.queryCouponBatchById(coupon.getBatchId());
+            batchRule = couponBatch.getRule();
+        }
         /*
          * 将JSON中的rule规则，转化成CouponRule对象
          */

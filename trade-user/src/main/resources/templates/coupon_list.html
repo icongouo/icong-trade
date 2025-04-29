@@ -24,37 +24,41 @@
                 <li class="tab-nav-item"><a href="javascript:;"><span>已使用</span></a></li>
                 <li class="tab-nav-item"><a href="javascript:;"><span>已过期</span></a></li>
             </ul>
-            <div class="aui-flex aui-flex-search b-line">
-                <div class="aui-flex-box"><input type="text" placeholder="请输入兑换码"></div>
-                <div class="aui-button-btn">
-                    <button>兑换</button>
+            <form role="form" th:action="@{/coupon/useCouponCode/86869}" method="post">
+                <div class="aui-flex aui-flex-search b-line">
+                    <div class="aui-flex-box"><input type="text"  id="couponCode" name="couponCode" placeholder="请输入兑换码"></div>
+                    <div class="aui-button-btn">
+                        <button type="submit">兑换</button>
+                    </div>
                 </div>
-            </div>
+            </form>
             <div class="tab-panel">
                 <!--  未使用 -->
                 <div class="tab-panel-item tab-active">
-                    <a href="javascript:;" class="aui-flex">
+
+                    <a href="javascript:;" class="aui-flex" th:each="couponVO : ${notUsedList}">
                         <div class="aui-price-nub">
-                            <div class="aui-digit"><h2><em>￥</em>10</h2></div>
-                            <div class="aui-full"><p>满1000元可用</p></div>
+                            <div class="aui-digit"><h2><em>$</em><span th:text="${couponVO.discountAmount}"/></h2></div>
+                            <div class="aui-full"><p><span th:text="${couponVO.thresholdAmountStr}"/></p></div>
                         </div>
-                        <div class="aui-flex-box"><h2>圣诞节专享红包-演唱会优惠券</h2>
-                            <h3>2023.09.03~2023.09.29</h3>
+                        <div class="aui-flex-box"><h2><span th:text="${couponVO.couponName}"/></h2>
+                            <h3><span th:text="${couponVO.startTimeToEndTime}"/></h3>
                             <button>去使用</button>
                         </div>
                     </a>
+
                 </div>
 
 
                 <!-- 已使用 -->
                 <div class="tab-panel-item tab-panel-item-clear">
-                    <a href="javascript:;" class="aui-flex">
+                    <a href="javascript:;" class="aui-flex" th:each="couponVO : ${usedList}">
                         <div class="aui-price-nub">
-                            <div class="aui-digit"><h2><em>￥</em>10</h2></div>
-                            <div class="aui-full"><p>满1000元可用</p></div>
+                            <div class="aui-digit"><h2><em>$</em><span th:text="${couponVO.discountAmount}"/></h2></div>
+                            <div class="aui-full"><p><span th:text="${couponVO.thresholdAmountStr}"/></p></div>
                         </div>
-                        <div class="aui-flex-box"><h2>圣诞节专享红包-演唱会优惠券</h2>
-                            <h3>2023.09.03~2023.09.29</h3>
+                        <div class="aui-flex-box"><h2><span th:text="${couponVO.couponName}"/></h2>
+                            <h3><span th:text="${couponVO.startTimeToEndTime}"/></h3>
                             <button>已使用</button>
                         </div>
                     </a>
@@ -62,13 +66,13 @@
 
                 <!-- 已过期 -->
                 <div class="tab-panel-item tab-panel-item-clear">
-                    <a href="javascript:;" class="aui-flex">
+                    <a href="javascript:;" class="aui-flex" th:each="couponVO : ${expiredList}">
                         <div class="aui-price-nub">
-                            <div class="aui-digit"><h2><em>￥</em>10</h2></div>
-                            <div class="aui-full"><p>满1000元可用</p></div>
+                            <div class="aui-digit"><h2><em>$</em><span th:text="${couponVO.discountAmount}"/></h2></div>
+                            <div class="aui-full"><p><span th:text="${couponVO.thresholdAmountStr}"/></p></div>
                         </div>
-                        <div class="aui-flex-box"><h2>圣诞节专享红包-演唱会优惠券</h2>
-                            <h3>2023.09.03~2023.09.29</h3>
+                        <div class="aui-flex-box"><h2><span th:text="${couponVO.couponName}"/></h2>
+                            <h3><span th:text="${couponVO.startTimeToEndTime}"/></h3>
                             <button>已过期</button>
                         </div>
                     </a>
