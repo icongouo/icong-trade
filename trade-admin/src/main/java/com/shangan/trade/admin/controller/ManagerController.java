@@ -4,11 +4,15 @@ import com.alibaba.fastjson.JSON;
 import com.shangan.trade.coupon.db.model.CouponBatch;
 import com.shangan.trade.coupon.db.model.CouponRule;
 import com.shangan.trade.coupon.service.CouponBatchService;
+import com.shangan.trade.coupon.service.CouponSendService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +25,9 @@ public class ManagerController {
 
     @Autowired
     private CouponBatchService couponBatchService;
+
+    @Autowired
+    private CouponSendService couponSendService;
 
     /**
      * 跳转到主页面
@@ -110,6 +117,64 @@ public class ManagerController {
             log.error("addCouponBatchAction error", e);
             //跳转到异常提示页面
             return "error_page";
+        }
+    }
+
+
+    /**
+     * 发放优惠券给用户
+     *
+     * @param batchId
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/sendSyn/{batchId}/{userId}")
+    @ResponseBody
+    public String sendCouponSyn(@PathVariable long batchId, @PathVariable long userId) {
+        try {
+            log.info("batchId={}, userId={}", batchId, userId);
+            couponSendService.sendUserCouponSyn(batchId, userId);
+            return "优惠券发放成功";
+        } catch (Exception e) {
+            //发放优惠券给用户失败
+            log.error("sendCouponSyn error,errorMessage:{}", e.getMessage());
+            return "发放优惠券给用户失败,原因:" + e.getMessage();
+        }
+    }
+
+    /**
+     * 跳转券批次信息添加
+     *
+     * @return
+     */
+    @RequestMapping("/sendCouponSyn")
+    public String sendCouponSyn() {
+        return "send_coupon_syn";
+    }
+
+    /**
+     * 发放优惠券给用户
+     *
+     * @param batchId
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/sendCouponSynAction")
+    public ModelAndView sendCouponSynAction(@RequestParam("batchId") long batchId,
+                                            @RequestParam("userId") long userId) {
+        ModelAndView modelAndView = new ModelAndView();
+        try {
+            log.info("batchId={}, userId={}", batchId, userId);
+            couponSendService.sendUserCouponSyn(batchId, userId);
+            modelAndView.addObject("resultInfo", "发放成功");
+            modelAndView.setViewName("process_result");
+            return modelAndView;
+        } catch (Exception e) {
+            //发放优惠券给用户失败
+            log.error("sendCouponSyn error,errorMessage:{}", e.getMessage());
+            modelAndView.addObject("resultInfo", "发放优惠券给用户失败,原因" + e.getMessage());
+            modelAndView.setViewName("process_result");
+            return modelAndView;
         }
     }
 }

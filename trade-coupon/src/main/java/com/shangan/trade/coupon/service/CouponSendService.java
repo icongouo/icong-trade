@@ -12,5 +12,5 @@ public interface CouponSendService {
      * @param userId
      * @return
      */
-    boolean sendUserCouponSyn(long batchId, long userId) throws Exception;
+    boolean sendUserCouponSyn(long batchId, long userId);
 }

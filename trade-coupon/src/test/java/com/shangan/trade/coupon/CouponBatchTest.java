@@ -17,7 +17,7 @@ public class CouponBatchTest {
     private CouponBatchDao couponBatchDao;
 
     @Test
-    public void insertGoodsTest() {
+    public void insertCouponBatchTest() {
         CouponBatch couponBatch = new CouponBatch();
         couponBatch.setBatchName("优惠券批次测试");
         couponBatch.setCouponName("满100减20优惠券");
